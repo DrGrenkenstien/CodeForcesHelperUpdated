@@ -1,10 +1,10 @@
 import React from 'react'
-// import Nav from '../components/Nav'
+import ComplexNavbar from '../components/NavBar'
 
 const Home = () => {
   return (
     <>
-    <h1>Nav goes here</h1>
+    <ComplexNavbar/>
     </>
   )
 }

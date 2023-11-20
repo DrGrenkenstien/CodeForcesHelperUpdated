@@ -4,7 +4,7 @@ import { signupFields } from "../constants/formFields"
 import FormAction from "./FormAction";
 import Input from "./Input";
 import auth from "../constants/firebase"
-import {createUserWithEmailAndPassword} from 'firebase/auth'
+import {User, createUserWithEmailAndPassword} from 'firebase/auth'
 import { Navigate } from "react-router-dom";
 
 const fields=signupFields;
@@ -15,11 +15,16 @@ fields.forEach(field => fieldsState[field.id]='');
 export default function Signup(){
   const [signupState,setSignupState]=useState(fieldsState);
   const [isLoggedIn, setisLoggedIn] = useState(false)
+  const [user, setUser] = useState<User | null>(null)
 
   const handleChange=(e)=>setSignupState({...signupState,[e.target.id]:e.target.value});
 
   if(isLoggedIn){
     return <Navigate to = '/'/>
+  }
+
+  if(user){
+    return <Navigate to = '/home'/>
   }
 
   const handleSubmit=(e)=>{
@@ -36,7 +41,8 @@ export default function Signup(){
     createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       // Signed up 
-      const user = userCredential.user;
+      const User = userCredential.user;
+      setUser(User)
       // ...
     })
     .catch((error) => {

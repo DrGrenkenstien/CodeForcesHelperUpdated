@@ -1,10 +1,12 @@
+import React from 'react'
 import { useState } from 'react';
 import { loginFields } from "../constants/formFields";
 import FormAction from "./FormAction";
 import FormExtra from "./FormExtra";
 import Input from "./Input";
 import auth from "../constants/firebase"
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { User, signInWithEmailAndPassword } from "firebase/auth";
+import { Navigate } from "react-router-dom"
 
 
 const fields=loginFields;
@@ -13,12 +15,17 @@ fields.forEach(field=>fieldsState[field.id]='');
 
 export default function Login(){
     const [loginState,setLoginState]=useState(fieldsState);
+    const [user, setUser] = useState<User | null>(null)
 
-    const handleChange=(e)=>{
-        setLoginState({...loginState,[e.target.id]:e.target.value})
+    if(user){
+        return <Navigate to = '/home'/>
     }
 
-    const handleSubmit=(e)=>{
+    const handleChange=(e: any)=>{
+        setLoginState({...loginState,[e.target?.id]:e.target?.value})
+    }
+
+    const handleSubmit=(e: any)=>{
         e.preventDefault();
         authenticateUser();
     }
@@ -30,7 +37,8 @@ export default function Login(){
         signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             // Signed in 
-            const user = userCredential.user;
+            const tempUser: User = userCredential.user
+             setUser(tempUser);
             // ...
         })
         .catch((error) => {
