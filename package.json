@@ -1,0 +1,15 @@
+{
+  "dependencies": {
+    "@vitejs/plugin-react": "^4.2.0",
+    "firebase": "^10.6.0",
+    "react-router-dom": "^6.19.0",
+    "tailwind": "^4.0.0",
+    "vite": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.9.1",
+    "@types/react-dom": "^18.2.15",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.31"
+  }
+}
