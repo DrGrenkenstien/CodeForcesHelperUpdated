@@ -1,10 +1,16 @@
 import React from 'react'
-import ComplexNavbar from '../components/NavBar'
+import Navbar from '../components/NavBar'
+import DashBoard from '../components/DashBoard'
 
 const Home = () => {
   return (
     <>
-    <ComplexNavbar/>
+    <div className='mb-10'>
+      <Navbar/>
+    </div>
+    <div>
+      <DashBoard/>
+    </div>
     </>
   )
 }
