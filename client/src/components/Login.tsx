@@ -38,7 +38,9 @@ export default function Login(){
         .then((userCredential) => {
             // Signed in 
             const tempUser: User = userCredential.user
-             setUser(tempUser);
+            localStorage.setItem("isLoggedIn", true)
+            localStorage.setItem("userEmail", email)
+            setUser(tempUser);
             // ...
         })
         .catch((error) => {

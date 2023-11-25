@@ -42,6 +42,8 @@ export default function Signup(){
     .then((userCredential) => {
       // Signed up 
       const User = userCredential.user;
+      localStorage.setItem("isLoggedIn", true)
+      localStorage.setItem("userEmail", email)
       setUser(User)
       // ...
     })

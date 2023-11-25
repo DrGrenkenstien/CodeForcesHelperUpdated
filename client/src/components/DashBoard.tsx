@@ -6,7 +6,7 @@ import LeaderBoard from './DashboardComponents/LeaderBoard'
 const DashBoard = () => {
   return (
     <>  
-    <div className='flex justify-center'>
+    <div className='flex justify-center space-x-10'>
         <TotalStats/>
         <LearningBlogs/>
         <LeaderBoard/>
