@@ -7,11 +7,34 @@ import Input from "./Input";
 import auth from "../constants/firebase"
 import { User, signInWithEmailAndPassword } from "firebase/auth";
 import { Navigate } from "react-router-dom"
+import axios from 'axios';
 
 
 const fields=loginFields;
 let fieldsState = {};
 fields.forEach(field=>fieldsState[field.id]='');
+
+const makeApiCall = async (email, username) => {
+
+    const data = {
+        "email" : email,
+        "username" : username
+    }
+
+    try {
+        // Make a POST request to the "user/profile" endpoint
+        const response = await axios.post('http://localhost:3000/user/profile', data);
+  
+        // Handle the response data
+        console.log('Profile updated successfully:', response.data);
+  
+        // You can do more with the response data here
+  
+      } catch (error : any) {
+        // Handle errors
+        console.error('Error updating profile:', error.message);
+      }
+}
 
 export default function Login(){
     const [loginState,setLoginState]=useState(fieldsState);
@@ -40,6 +63,9 @@ export default function Login(){
             const tempUser: User = userCredential.user
             localStorage.setItem("isLoggedIn", true)
             localStorage.setItem("userEmail", email)
+            
+            makeApiCall(email, "random")
+
             setUser(tempUser);
             // ...
         })
