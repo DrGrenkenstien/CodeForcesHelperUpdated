@@ -6,11 +6,34 @@ import Input from "./Input";
 import auth from "../constants/firebase"
 import {User, createUserWithEmailAndPassword} from 'firebase/auth'
 import { Navigate } from "react-router-dom";
+import axios from 'axios';
 
 const fields=signupFields;
 let fieldsState={};
 
 fields.forEach(field => fieldsState[field.id]='');
+
+const storeUserInfo = async (email : String, codeforcesUsername : String) => {
+
+  const data = {
+      "email" : email,
+      "codeforcesUsername" : codeforcesUsername
+  }
+
+  try {
+      // Make a POST request to the "user/profile" endpoint
+      const response = await axios.post('http://localhost:3000/user/', data);
+
+      // Handle the response data
+      console.log('Profile updated successfully:', response.data);
+
+      // You can do more with the response data here
+
+    } catch (error : any) {
+      // Handle errors
+      console.error('Error updating profile:', error.message);
+    }
+}
 
 export default function Signup(){
   const [signupState,setSignupState]=useState(fieldsState);
@@ -38,12 +61,16 @@ export default function Signup(){
     // const auth = getAuth();
     const email = signupState["email-address"]
     const password = signupState["password"]
+    const codeforcesUsername = signupState["username"]
     createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       // Signed up 
       const User = userCredential.user;
       localStorage.setItem("isLoggedIn", true)
       localStorage.setItem("userEmail", email)
+
+      storeUserInfo(email, codeforcesUsername)
+
       setUser(User)
       // ...
     })
