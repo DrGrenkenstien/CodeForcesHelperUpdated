@@ -19,4 +19,17 @@ routes.post("/", async (req, res) => {
     }
 })
 
+routes.post("/cfusername", async (req, res) => {
+    try {
+        const email = req.body["email"]
+        const userInfo = await UserModel.findOne({"email" : email})
+        // res.cookie('cfUserName', userInfo["codeforces_username"], { maxAge: 900000, httpOnly: false });
+        res.send(userInfo["codeforces_username"])
+
+    } catch (error) {
+        console.log("Error occurred while fetching user infod", error)
+        res.send(error)
+    }
+})
+
 export default routes
