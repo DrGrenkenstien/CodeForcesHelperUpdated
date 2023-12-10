@@ -1,26 +1,23 @@
 import React from 'react'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
+import Cookies from 'js-cookie';
 
 const TotalStats = () => {
-
   const [condeforcesUsername, setCodeforcesUsername] = useState(null)
-
-  useEffect(()=> {
-
-      const getUsername = async () => {
+  const getUsername = async () => {
         
-        const email = localStorage.getItem("userEmail")
-        const data = {
-          "email" : email 
-        }
-  
-        const response = await axios.post("http://localhost:3000/user/cfusername/", data)
-        console.log("Response received : ", response.data)
-        setCodeforcesUsername(response.data)
-      }
+    const email = localStorage.getItem("userEmail")
+    const data = {
+      "email" : email 
+    }
+    const response = await axios.post("http://localhost:3000/user/cfusername/", data) 
+    console.log("Response received : ", response.data)
+    Cookies.set('cfUsername', response.data, { expires: 7, path: '/' });
+    setCodeforcesUsername(response.data)
+  }
+  useEffect(()=> {
       getUsername()
-
   }, [])
 
   return (
