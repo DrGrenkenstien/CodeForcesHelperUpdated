@@ -3,8 +3,19 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 import Cookies from 'js-cookie';
 
+const fetchUserDetails = async () => {
+  const cfusername = Cookies.get("cfUsername")
+  console.log("Length of passed string : ", cfusername?.length)
+  const data = {
+    "cfUsername" : cfusername 
+  }
+  const response = await axios.post("http://localhost:3000/codeforces/userinfo", data)    
+  console.log("Data recieved at the client", response.data["result"][0])
+}
+
 const TotalStats = () => {
-  const [condeforcesUsername, setCodeforcesUsername] = useState(null)
+  // const [condeforcesUsername, setCodeforcesUsername] = useState<string | null>(null)
+  
   const getUsername = async () => {
         
     const email = localStorage.getItem("userEmail")
@@ -14,10 +25,12 @@ const TotalStats = () => {
     const response = await axios.post("http://localhost:3000/user/cfusername/", data) 
     console.log("Response received : ", response.data)
     Cookies.set('cfUsername', response.data, { expires: 7, path: '/' });
-    setCodeforcesUsername(response.data)
   }
+
+
   useEffect(()=> {
       getUsername()
+      fetchUserDetails()
   }, [])
 
   return (
