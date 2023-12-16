@@ -63,4 +63,22 @@ routes.post("/userinfo", async (req, res) =>{
     
 })
 
+routes.post("/status", async (req, res) => {
+  try {
+    const rand = generateRandomSixDigitCode()
+    const time = getCurrentUnixTime()
+    const cfUserName = req.body["cfUsername"]
+
+    const hash_string = `${rand}/user.status?apiKey=${apiKey}&handles=${cfUserName}&time=${time}#${CODEFORCES_SECRET}`
+    const apiSig = generateSHA512Hash(hash_string)
+
+    const URL = `https://codeforces.com/api/user.status?handles=${cfUserName}&apiKey=${apiKey}&time=${time}&apiSig=${rand}${apiSig}`
+
+    const userInfo = await axios.get(URL)
+    res.send(userInfo.data)
+  } catch (error) {
+      console.log("Error in user info fetch", error)
+  }
+})
+
 export default routes
