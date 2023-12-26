@@ -81,12 +81,11 @@ const DashBoard = () => {
                     as="h3"
                     className="text-lg font-medium leading-6 text-gray-900"
                   >
-                    Payment successful
+                    Your Total CodeForces Stats
                   </Dialog.Title>
                   <div className="mt-2">
                     <p className="text-sm text-gray-500">
-                      Your payment has been successfully submitted. We’ve sent
-                      you an email with all of the details of your order.
+                      Lorem ipsum dolor sit, amet consectetur adipisicing elit. Error officia, laudantium cupiditate quos, dolore provident excepturi, odio cumque quas reprehenderit numquam exercitationem veritatis dolorem? Vitae id perferendis omnis totam quia?
                     </p>
                   </div>
 

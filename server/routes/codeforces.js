@@ -32,18 +32,6 @@ function getCurrentUnixTime() {
     return currentUnixTimeInSeconds;
 }
 
-const customSerializer = (key, value) => {
-    if (typeof value === 'object' && value !== null) {
-      if (value instanceof Set) {
-        return [...value];
-      }
-      if (value instanceof Map) {
-        return [...value.entries()];
-      }
-    }
-    return value;
-  };
-
 routes.post("/userinfo", async (req, res) =>{
     try {
         const rand = generateRandomSixDigitCode()
@@ -69,10 +57,12 @@ routes.post("/status", async (req, res) => {
     const time = getCurrentUnixTime()
     const cfUserName = req.body["cfUsername"]
 
-    const hash_string = `${rand}/user.status?apiKey=${apiKey}&handles=${cfUserName}&time=${time}#${CODEFORCES_SECRET}`
+    console.log("Received username : ", cfUserName)
+
+    const hash_string = `${rand}/user.status?apiKey=${apiKey}&handles=${cfUserName}&from=1&count=10&time=${time}#${CODEFORCES_SECRET}`
     const apiSig = generateSHA512Hash(hash_string)
 
-    const URL = `https://codeforces.com/api/user.status?handles=${cfUserName}&apiKey=${apiKey}&time=${time}&apiSig=${rand}${apiSig}`
+    const URL = `https://codeforces.com/api/user.status?handles=${cfUserName}&from=1&count=10&apiKey=${apiKey}&time=${time}&apiSig=${rand}${apiSig}`
 
     const userInfo = await axios.get(URL)
     res.send(userInfo.data)
