@@ -7,7 +7,6 @@ import Input from "./Input";
 import auth from "../constants/firebase"
 import { User, signInWithEmailAndPassword } from "firebase/auth";
 import { Navigate } from "react-router-dom"
-import userContext from '../context/UserContext.ts'
 
 
 const fields=loginFields;
@@ -15,11 +14,11 @@ let fieldsState = {};
 fields.forEach(field=>fieldsState[field.id]='');
 
 export default function Login(){
-    const {email, setEmail} = userContext()
+    // const {email, setEmail} = userContext()
     const [loginState,setLoginState]=useState(fieldsState);
-    // const [user, setUser] = useState<User | null>(null)
+    const [user, setUser] = useState<User | null>(null)
 
-    if(email){
+    if(user){
         return <Navigate to = '/home'/>
     }
 
@@ -43,8 +42,8 @@ export default function Login(){
             localStorage.setItem("isLoggedIn", true)
             localStorage.setItem("userEmail", email)
             
-            setEmail(email)
-            // setUser(tempUser);
+            // setEmail(email)
+            setUser(tempUser);
             // ...
         })
         .catch((error) => {

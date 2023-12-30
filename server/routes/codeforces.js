@@ -59,10 +59,10 @@ routes.post("/status", async (req, res) => {
 
     console.log("Received username : ", cfUserName)
 
-    const hash_string = `${rand}/user.status?apiKey=${apiKey}&handles=${cfUserName}&from=1&count=10&time=${time}#${CODEFORCES_SECRET}`
+    const hash_string = `${rand}/user.status?apiKey=${apiKey}&handle=${cfUserName}&from=1&count=10&time=${time}#${CODEFORCES_SECRET}`
     const apiSig = generateSHA512Hash(hash_string)
 
-    const URL = `https://codeforces.com/api/user.status?handles=${cfUserName}&from=1&count=10&apiKey=${apiKey}&time=${time}&apiSig=${rand}${apiSig}`
+    const URL = `https://codeforces.com/api/user.status?handle=${cfUserName}&from=1&count=10&apiKey=${apiKey}&time=${time}&apiSig=${rand}${apiSig}`
 
     const userInfo = await axios.get(URL)
     res.send(userInfo.data)

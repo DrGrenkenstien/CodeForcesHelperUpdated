@@ -2,10 +2,9 @@ import React from 'react'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import Cookies from 'js-cookie';
-import userContext from '../../context/UserContext.ts'
 
-const fetchUserDetails = async (cfusername : String) => {
-  // const cfusername = Cookies.get("cfUsername")
+const fetchUserDetails = async () => {
+  const cfusername = localStorage.getItem("cfUsername")
   const data = {
     "cfUsername" : cfusername 
   }
@@ -15,11 +14,10 @@ const fetchUserDetails = async (cfusername : String) => {
 }
 
 const TotalStats = () => {
-  const {cfUsername} = userContext()
   const [cfUserInfo, setcfUserInfo] = useState<object>({})
 
   useEffect(()=> {
-      fetchUserDetails(cfUsername).then((userInfo) => {
+      fetchUserDetails().then((userInfo) => {
         setcfUserInfo(userInfo)
       })
   }, [])

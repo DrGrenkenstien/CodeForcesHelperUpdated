@@ -7,7 +7,6 @@ import auth from "../constants/firebase"
 import {User, createUserWithEmailAndPassword} from 'firebase/auth'
 import { Navigate } from "react-router-dom";
 import axios from 'axios';
-import userContext from '../context/UserContext.ts'
 
 const fields=signupFields;
 let fieldsState={};
@@ -37,9 +36,10 @@ const storeUserInfo = async (email : String, codeforcesUsername : String) => {
 }
 
 export default function Signup(){
-  const {email, setEmail, cfUsername, setCfUsername} = userContext()
+  // const {email, setEmail, cfUsername, setCfUsername} = userContext()
   const [signupState,setSignupState]=useState(fieldsState);
   const [isLoggedIn, setisLoggedIn] = useState(false)
+  const [user, setUser] = useState<User | null>(null)
 
   const handleChange=(e)=>setSignupState({...signupState,[e.target.id]:e.target.value});
 
@@ -47,7 +47,7 @@ export default function Signup(){
     return <Navigate to = '/'/>
   }
 
-  if(email){
+  if(user){
     return <Navigate to = '/home'/>
   }
 
@@ -71,9 +71,10 @@ export default function Signup(){
       localStorage.setItem("userEmail", email)
 
       storeUserInfo(email, codeforcesUsername)
+      setUser(User)
 
-      setEmail(email)
-      setCfUsername(codeforcesUsername)
+      // setEmail(email)
+      // setCfUsername(codeforcesUsername)
       // ...
     })
     .catch((error) => {
