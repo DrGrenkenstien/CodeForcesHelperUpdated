@@ -2,9 +2,10 @@ import React from 'react'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import Cookies from 'js-cookie';
+import userContext from '../../context/UserContext.ts'
 
-const fetchUserDetails = async () => {
-  const cfusername = Cookies.get("cfUsername")
+const fetchUserDetails = async (cfusername : String) => {
+  // const cfusername = Cookies.get("cfUsername")
   const data = {
     "cfUsername" : cfusername 
   }
@@ -13,23 +14,12 @@ const fetchUserDetails = async () => {
   return response.data["result"][0]
 }
 
-const getUsername = async () => {
-        
-  const email = localStorage.getItem("userEmail")
-  const data = {
-    "email" : email 
-  }
-  const response = await axios.post("http://localhost:3000/user/cfusername/", data) 
-  console.log("Response received : ", response.data)
-  Cookies.set('cfUsername', response.data, { expires: 7, path: '/' });
-}
-
 const TotalStats = () => {
+  const {cfUsername} = userContext()
   const [cfUserInfo, setcfUserInfo] = useState<object>({})
 
   useEffect(()=> {
-      getUsername()
-      fetchUserDetails().then((userInfo) => {
+      fetchUserDetails(cfUsername).then((userInfo) => {
         setcfUserInfo(userInfo)
       })
   }, [])

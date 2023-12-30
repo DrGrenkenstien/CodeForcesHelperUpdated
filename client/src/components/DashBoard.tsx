@@ -7,9 +7,10 @@ import { Dialog, Transition } from '@headlessui/react'
 import { Fragment} from 'react' 
 import Cookies from 'js-cookie';
 import axios from 'axios'
+import userContext from '../context/UserContext.ts'
 
-const fetchUserSubmissions = async() => {
-  const cfusername = Cookies.get("cfUsername")
+const fetchUserSubmissions = async(cfusername : String) => {
+  // const cfusername = Cookies.get("cfUsername")
   console.log("USERNAME IN DASHBOARD : ", cfusername)
   const data = {
     "cfUsername" : cfusername 
@@ -19,7 +20,20 @@ const fetchUserSubmissions = async() => {
   return response.data["result"][0]
 }
 
+const getUsername = async (email :String, setCfUsername) => {
+        
+  // const email = localStorage.getItem("userEmail")
+  const data = {
+    "email" : email 
+  }
+  const response = await axios.post("http://localhost:3000/user/cfusername/", data) 
+  console.log("Response received : ", response.data)
+  setCfUsername(response.data)
+  // Cookies.set('cfUsername', response.data, { expires: 7, path: '/' });
+}
+
 const DashBoard = () => {
+  const {email, setCfUsername, cfUsername} = userContext()
   let [isStatsOpen, setisStatsOpen] = useState(false)
 
   function closeStatsModal() {
@@ -31,7 +45,8 @@ const DashBoard = () => {
   }
 
   useEffect(() => {
-    fetchUserSubmissions().then((response) => {
+    getUsername(email, setCfUsername)
+    fetchUserSubmissions(cfUsername).then((response) => {
       console.log("userSubmissions are : ", response)
     })
   }, [])

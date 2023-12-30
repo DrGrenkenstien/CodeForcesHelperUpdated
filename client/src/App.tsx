@@ -1,5 +1,5 @@
 import './App.css';
-import React from 'react'
+import React, { useState } from 'react'
 import {
   BrowserRouter,
   Routes,
@@ -9,10 +9,20 @@ import SignupPage from './pages/Signup';
 import LoginPage from './pages/Login';
 import Home from './pages/Home'
 import {UserContextProvider} from './context/UserContext.ts'
-import userContext from './context/UserContext.ts'
 
 function App() {
-  const {email, cfUsername, setCfUsername, setEmail} = userContext()
+  // const {email, cfUsername} = userContext()
+  const [email, setlocal_email] = useState<String | null>(null)
+  const [cfUsername, setlocal_cfUsername] = useState<String | null>(null)
+
+  const setCfUsername = (val : String) => {
+        setlocal_cfUsername(val)
+  }
+
+  const setEmail = (val : String) => {
+        setlocal_email(val)
+  }
+
   return (
     // <div className="min-h-full h-screen py-12 px-4 sm:px-6 lg:px-8">
     // <div className="">

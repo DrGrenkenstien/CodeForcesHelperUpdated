@@ -1,10 +1,10 @@
 import { useContext, createContext } from "react";
 
 const userContext = createContext({
-    cfUsername: "",
-    email: "",
-    setCfUsername: () => {},
-    setEmail: () => {}
+    // cfUsername: "",
+    // email: "",
+    // setCfUsername: (val : String) => {},
+    // setEmail: (val : String) => {}
 })
 
 export const UserContextProvider = userContext.Provider
