@@ -16,7 +16,6 @@ const fetchUserSubmissions = async() => {
     "cfUsername" : cfusername 
   }
   const response = await axios.post("http://localhost:3000/codeforces/status", data)    
-  console.log("Submissions are", response.data["result"][0])
   return response.data["result"][0]
 }
 
