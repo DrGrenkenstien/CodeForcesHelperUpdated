@@ -57,14 +57,13 @@ routes.post("/status", async (req, res) => {
     const time = getCurrentUnixTime()
     const cfUserName = req.body["cfUsername"]
 
-    console.log("Received username : ", cfUserName)
-
     const hash_string = `${rand}/user.status?apiKey=${apiKey}&handle=${cfUserName}&time=${time}#${CODEFORCES_SECRET}`
     const apiSig = generateSHA512Hash(hash_string)
 
     const URL = `https://codeforces.com/api/user.status?handle=${cfUserName}&apiKey=${apiKey}&time=${time}&apiSig=${rand}${apiSig}`
 
     const userInfo = await axios.get(URL)
+    console.log("User submission in the backend is: ", userInfo.data)
     res.send(userInfo.data)
   } catch (error) {
       console.log("Error in user info fetch", error)

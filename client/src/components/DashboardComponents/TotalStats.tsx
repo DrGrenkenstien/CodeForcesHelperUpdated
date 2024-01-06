@@ -1,7 +1,6 @@
 import React from 'react'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
-import Cookies from 'js-cookie';
 
 const fetchUserDetails = async () => {
   const cfusername = localStorage.getItem("cfUsername")
@@ -9,7 +8,7 @@ const fetchUserDetails = async () => {
     "cfUsername" : cfusername 
   }
   const response = await axios.post("http://localhost:3000/codeforces/userinfo", data)    
-  console.log("Data recieved at the client", response.data["result"][0])
+  // console.log("Data recieved at the client", response.data["result"][0])
   return response.data["result"][0]
 }
 
