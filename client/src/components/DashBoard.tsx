@@ -32,21 +32,79 @@ const getUsername = async () => {
   localStorage.setItem("cfUsername", response.data)
 }
 
-const getRatingWiseDistribution = (submissions) =>{
+function isEmptyObject(obj : Object) {
+  return Object.keys(obj).length === 0;
+}
+
+const getRatingWiseDistribution = (submissions:object) =>{
     
       let data = {}
 
-      for (const obj in submissions){
+      if(isEmptyObject(submissions)) return data
+      
+      for (const key in submissions){
 
+          const obj = submissions[key]
           const problemObject = obj["problem"]
-          data[problemObject["rating"]] += 1
+
+          if(problemObject["rating"] == undefined){
+            continue
+          }
+
+          data[problemObject["rating"]] = data[problemObject["rating"]] == null ? 1 : data[problemObject["rating"]] + 1
       }
       return data
+}
+
+const getTagwiseDistribution = (submissions:object) =>{
+
+    let data = {}
+
+    if(isEmptyObject(submissions)) return data
+
+    for (const key in submissions){
+      
+      const obj = submissions[key]
+      const problemObject = obj["problem"]
+      const tagList = problemObject["tags"]
+      
+      if(problemObject["tags"] == undefined){
+        continue
+      }
+
+      for (const tagName in tagList){
+        data[tagList[tagName]] = data[tagList[tagName]] == null ? 1 : data[tagList[tagName]] + 1 
+      }
+  }
+  return data
 }
 
 const DashBoard = () => {
   let [isStatsOpen, setisStatsOpen] = useState(false)
   const [submissions, setUsersubmissions] = useState({})
+
+  const ratingDist = getRatingWiseDistribution(submissions)
+  const tagDist = getTagwiseDistribution(submissions)
+
+  // let keysList: string[] = Object.keys(person)
+  const ratingList = Object.keys(ratingDist)
+  const valuesList = ratingList.map(key => ratingDist[key]);
+
+  // const tagList = Object.keys(tagDist)
+  // const tagValueList = tagList.map(key => tagDist[key]);
+
+  const pieChartData = []
+
+  for (const key in tagDist){
+    const localObject = {}
+
+    localObject["id"] = pieChartData.length
+    localObject["value"] = tagDist[key]
+    localObject["label"] = key
+
+    pieChartData.push(localObject)
+
+  }
 
   function closeStatsModal() {
     setisStatsOpen(false)
@@ -104,7 +162,7 @@ const DashBoard = () => {
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="w-2/3 transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                <Dialog.Panel className="w-3/4 transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
                   <Dialog.Title
                     as="h3"
                     className="text-lg font-medium leading-6 text-gray-900"
@@ -112,37 +170,33 @@ const DashBoard = () => {
                     Your Total CodeForces Stats
                   </Dialog.Title>
                   <div className="mt-2">
-                    <div className="relative">
+                    <div>
                       <BarChart
                           xAxis={[
                             {
                               id: 'barCategories',
-                              data: ['bar A', 'bar B', 'bar C'],
+                              data: ratingList,
                               scaleType: 'band',
                             },
                           ]}
                           series={[
                             {
-                              data: [2, 5, 3],
+                              data: valuesList,
                             },
                           ]}
-                          width={400}
-                          height={300}
+                          width={600}
+                          height={500}
                         />
                     </div>
-                    <div className="relative">
+                    <div>
                       <PieChart
                           series={[
                             {
-                              data: [
-                                { id: 0, value: 10, label: 'series A' },
-                                { id: 1, value: 15, label: 'series B' },
-                                { id: 2, value: 20, label: 'series C' },
-                              ],
+                              data: pieChartData,
                             },
                           ]}
-                          width={400}
-                          height={200}
+                          width={1050}
+                          height={700}
                         />
                     </div>
                     
