@@ -63,7 +63,6 @@ routes.post("/status", async (req, res) => {
     const URL = `https://codeforces.com/api/user.status?handle=${cfUserName}&apiKey=${apiKey}&time=${time}&apiSig=${rand}${apiSig}`
 
     const userInfo = await axios.get(URL)
-    console.log("User submission in the backend is: ", userInfo.data)
     res.send(userInfo.data)
   } catch (error) {
       console.log("Error in user info fetch", error)
