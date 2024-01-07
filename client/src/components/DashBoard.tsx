@@ -8,6 +8,7 @@ import { Fragment} from 'react'
 import { BarChart } from '@mui/x-charts/BarChart';
 import { PieChart } from '@mui/x-charts/PieChart';
 import axios from 'axios'
+import Typography from '@mui/material/Typography';
 
 const fetchUserSubmissions = async() => {
   const cfusername = localStorage.getItem("cfUsername")
@@ -86,12 +87,8 @@ const DashBoard = () => {
   const ratingDist = getRatingWiseDistribution(submissions)
   const tagDist = getTagwiseDistribution(submissions)
 
-  // let keysList: string[] = Object.keys(person)
   const ratingList = Object.keys(ratingDist)
   const valuesList = ratingList.map(key => ratingDist[key]);
-
-  // const tagList = Object.keys(tagDist)
-  // const tagValueList = tagList.map(key => tagDist[key]);
 
   const pieChartData = []
 
@@ -169,7 +166,7 @@ const DashBoard = () => {
                   >
                     Your Total CodeForces Stats
                   </Dialog.Title>
-                  <div className="mt-2">
+                  <div className="mt-2 flex-col h-full justify-center">
                     <div>
                       <BarChart
                           xAxis={[
@@ -177,40 +174,37 @@ const DashBoard = () => {
                               id: 'barCategories',
                               data: ratingList,
                               scaleType: 'band',
+                              label: 'Problem Ratings'
                             },
                           ]}
                           series={[
                             {
                               data: valuesList,
+                              label:'Solved Count'
                             },
                           ]}
-                          width={600}
-                          height={500}
+                          width={700}
+                          height={600}
                         />
                     </div>
-                    <div>
+                    <div className='mt-10 flex-col h-full justify-center'>
                       <PieChart
                           series={[
                             {
                               data: pieChartData,
+                              highlightScope: { faded: 'global', highlighted: 'item' },
+                              faded: { innerRadius: 30, additionalRadius: -30, color: 'gray' },
                             },
                           ]}
                           width={1050}
                           height={700}
                         />
+                      <div>
+                          <Typography>Topic Wise Solved Count</Typography>
+                      </div>
                     </div>
                     
                   </div>
-
-                  {/* <div className="mt-4">
-                    <button
-                      type="button"
-                      className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                      onClick={closeStatsModal}
-                    >
-                      Got it, thanks!
-                    </button>
-                  </div> */}
                 </Dialog.Panel>
               </Transition.Child>
             </div>
