@@ -69,4 +69,21 @@ routes.post("/status", async (req, res) => {
   }
 })
 
+routes.get("/problems", async(req, res)=>{
+    try {
+        const rand = generateRandomSixDigitCode()
+        const time = getCurrentUnixTime()
+    
+        const hash_string = `${rand}/problemset.problems?apiKey=${apiKey}&time=${time}#${CODEFORCES_SECRET}`
+        const apiSig = generateSHA512Hash(hash_string)
+    
+        const URL = ` https://codeforces.com/api/problemset.problems?apiKey=${apiKey}&time=${time}&apiSig=${rand}${apiSig}`
+    
+        const userInfo = await axios.get(URL)
+        res.send(userInfo.data)
+      } catch (error) {
+          console.log("Error in problem fetch", error)
+      }
+})
+
 export default routes

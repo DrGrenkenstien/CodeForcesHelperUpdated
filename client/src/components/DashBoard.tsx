@@ -80,15 +80,56 @@ const getTagwiseDistribution = (submissions:object) =>{
   return data
 }
 
+const getProblemWithStats = async()=>{
+
+  const response = await axios.get("http://localhost:3000/codeforces/problems")
+  return response.data["result"]
+
+}
+
+const getProblems = (problemAndStats)=>{
+
+   if(isEmptyObject(problemAndStats)) return []
+
+   const problems = problemAndStats["problems"]
+   const stats = problemAndStats["problemStatistics"]
+
+  //  let problemsToSolve = []
+
+   let problemWithSolvedCount = []
+
+   for(let i = 0; i < problems.length; i++){
+    // console.log(problems[i])
+      const obj = {
+        "name": problems[i]["name"],
+        "rating": problems[i]["points"],
+        "tags": problems[i]["tags"],
+        "solvedCount": stats[i]["solvedCount"],
+      }
+      problemWithSolvedCount.push(obj)
+   }
+
+   problemWithSolvedCount.sort(function(a, b) {
+    return b.solvedCount - a.solvedCount;
+  });
+
+   return problemWithSolvedCount.slice(0, 5);
+}
+
 const DashBoard = () => {
   let [isStatsOpen, setisStatsOpen] = useState(false)
+  let [isProblemsOpen, setisProblemsOpen] = useState(false)
   const [submissions, setUsersubmissions] = useState({})
+  const [problemAndStats, setProblemsAndStats] = useState({})
 
   const ratingDist = getRatingWiseDistribution(submissions)
   const tagDist = getTagwiseDistribution(submissions)
 
   const ratingList = Object.keys(ratingDist)
   const valuesList = ratingList.map(key => ratingDist[key]);
+
+  const problemsToSolve = getProblems(problemAndStats)
+  console.log(problemsToSolve)
 
   const pieChartData = []
 
@@ -111,12 +152,24 @@ const DashBoard = () => {
     setisStatsOpen(true)
   }
 
+  function closeProblemModal() {
+    setisStatsOpen(false)
+  }
+
+  function openOpenModal() {
+    setisStatsOpen(true)
+  }
+
   useEffect(() => {
     getUsername()
     fetchUserSubmissions().then((response) => {
-      console.log(response)
       setUsersubmissions(response)
     })
+    getProblemWithStats().then((response)=>{
+      console.log("Received problem stats : ", response)
+      setProblemsAndStats(response)
+    })
+
   }, [])
 
   return (
@@ -135,6 +188,84 @@ const DashBoard = () => {
     </div>
 
     <Transition appear show={isStatsOpen} as={Fragment}>
+        <Dialog as="div" className="relative z-10" onClose={closeStatsModal}>
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-black/25" />
+          </Transition.Child>
+
+          <div className="fixed inset-0 overflow-y-auto">
+            <div className="flex min-h-full items-center justify-center p-4 text-center">
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-95"
+                enterTo="opacity-100 scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100"
+                leaveTo="opacity-0 scale-95"
+              >
+                <Dialog.Panel className="w-3/4 transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                  <Dialog.Title
+                    as="h3"
+                    className="text-lg font-medium leading-6 text-gray-900"
+                  >
+                    Your Total CodeForces Stats
+                  </Dialog.Title>
+                  <div className="mt-2 flex-col h-full justify-center">
+                    <div>
+                      <BarChart
+                          xAxis={[
+                            {
+                              id: 'barCategories',
+                              data: ratingList,
+                              scaleType: 'band',
+                              label: 'Problem Ratings'
+                            },
+                          ]}
+                          series={[
+                            {
+                              data: valuesList,
+                              label:'Solved Count'
+                            },
+                          ]}
+                          width={700}
+                          height={600}
+                        />
+                    </div>
+                    <div className='mt-10 flex-col h-full justify-center'>
+                      <PieChart
+                          series={[
+                            {
+                              data: pieChartData,
+                              highlightScope: { faded: 'global', highlighted: 'item' },
+                              faded: { innerRadius: 30, additionalRadius: -30, color: 'gray' },
+                            },
+                          ]}
+                          width={1050}
+                          height={700}
+                        />
+                      <div>
+                          <Typography>Topic Wise Solved Count</Typography>
+                      </div>
+                    </div>
+                    
+                  </div>
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </div>
+        </Dialog>
+      </Transition>
+
+      <Transition appear show={isProblemsOpen} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={closeStatsModal}>
           <Transition.Child
             as={Fragment}
